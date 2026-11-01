@@ -1,21 +1,21 @@
 ﻿<#
 .SYNOPSIS
-  把「每节一个文件夹、图片按文件名排序」的笔记目录，构建成一个可离线打开的单文件 HTML 复习页。
+  把「每个小节一个文件夹、图片按文件名排序」的目录，构建成一个可离线打开的单文件 HTML 阅读页。
 
 .DESCRIPTION
-  - 子目录 = 小节，按名称中的数字自然排序（4.2.2_1 排在 4.2.2_2 之前，1 (2) 排在 1 (10) 之前）
+  - 子目录 = 小节，按名称中的数字自然排序（2.3.1_x 排在 2.3.2_y 之前，1 (2) 排在 1 (10) 之前）
   - 图片重编码后以 base64 内嵌，产物是单个可转发、可离线、可打印的 .html
   - 版式：悬浮目录卡片（不占版心）+ 单节视图 + 搜索 + 双列切换 + 灯箱
   - 已生成过的页面可用 -ReuseFrom 复用其中已内嵌的图片，重建只需几秒且画质不再受损
 
 .EXAMPLE
-  ./scripts/build-page.ps1 -Source ../5 -Out ../5/第5章图片笔记-轻量版.html `
-    -ChapterNo 5 -ChapterTitle 中央处理器 -Series '计组 · 图片笔记'
+  ./scripts/build-page.ps1 -Source ../notes -Out ../notes/notes.html `
+    -ChapterNo 2 -ChapterTitle '主题名' -Series 'My Notes'
 
 .EXAMPLE
   # 只改了标题/样式，图片直接复用上一版，秒级重建
-  ./scripts/build-page.ps1 -Source ../5 -Out ../5/第5章图片笔记-轻量版.html `
-    -ReuseFrom ../5/第5章图片笔记-轻量版.html -ChapterTitle 中央处理器
+  ./scripts/build-page.ps1 -Source ../notes -Out ../notes/notes.html `
+    -ReuseFrom ../notes/notes.html -ChapterTitle '改过的标题'
 #>
 [CmdletBinding()]
 param(
@@ -61,7 +61,7 @@ function ConvertTo-HtmlText([string]$text) {
   return $text
 }
 
-# 有些笔记目录的名字是带着 HTML 实体存下来的（如 AT&amp;T），展示时还原
+# 有些目录的名字是带着 HTML 实体存下来的（如 A&amp;B），展示时还原
 function ConvertFrom-HtmlText([string]$text) {
   $text = $text -replace '&amp;', '&'
   $text = $text -replace '&lt;', '<'

@@ -1,9 +1,9 @@
 ﻿<#
 .SYNOPSIS
-  校验构建出的单文件笔记页：结构计数、占位符残留、CSS 括号、重复 id、内嵌脚本语法。
+  校验构建出的单文件阅读页：结构计数、占位符残留、CSS 括号、重复 id、内嵌脚本语法。
 
 .EXAMPLE
-  ./scripts/check-page.ps1 -Path ../第4章图片笔记-轻量版.html
+  ./scripts/check-page.ps1 -Path ../notes/notes.html
 #>
 [CmdletBinding()]
 param(

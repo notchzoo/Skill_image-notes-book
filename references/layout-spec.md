@@ -6,11 +6,11 @@
 
 ```text
 body[data-toc=open|closed]
-├── button.toc-toggle          ← 左下角常驻胶囊：☰ 目录 · 4/16 · 当前小节
+├── button.toc-toggle          ← 左下角常驻胶囊：☰ 目录 · 3/12 · 当前小节
 ├── div.scrim                  ← 只在 <1200px 出现，点它收起目录
 ├── aside.sidebar              ← 悬浮目录卡片，position:fixed
 │   ├── .brand (small + 品牌行)
-│   ├── p                      ← 第 N 章 / 标题
+│   ├── p                      ← 标签行（Series，或「编号 / 标题」）
 │   ├── input#search
 │   └── nav > a × N            ← 小节链接，a.active 高亮
 ├── main (max-width:1080px, margin:0 auto)
@@ -32,7 +32,7 @@ body[data-toc=open|closed]
 | 正文 | `max-width:1080px; margin:0 auto` | 不再 `margin-left:306px`，切节时不重排 |
 | 默认状态 | `innerWidth >= 1720` 展开，否则收起 | 1720 ≈ 1080 + 2×(300+16)，此时面板正好落在留白里，零遮挡 |
 | 收起动画 | `translateX(calc(-100% - 20px))` + opacity | 只动面板，不动正文 |
-| localStorage | `notes-toc` = `open|closed` | 记住上次选择，跨章共享 |
+| localStorage | `notes-toc` = `open|closed` | 记住上次选择，多份产物共享 |
 
 四条收起路径（缺一条就会被抱怨"关不掉"）：
 
@@ -45,8 +45,8 @@ body[data-toc=open|closed]
 
 ## 3. 图片尺寸：为什么 `figure` 要限宽 1000px
 
-源截图普遍 830–1005px 宽。若图宽随版心（`width:100%`）走，1920 屏上会被拉到约 1510px，
-放大 1.6 倍，文字发虚。`figure{max-width:1000px;margin:0 auto 22px}` 让它接近原生比例。
+截图常见宽度 800–1100px。若图宽随版心（`width:100%`）走，1920 屏上会被拉到约 1510px，
+放大 1.5 倍以上，文字发虚。`figure{max-width:1000px;margin:0 auto 22px}` 让它接近原生比例。
 双列模式（`.compact figure{max-width:none}`）因为列宽只有约 500px，不需要这个限制。
 
 ## 4. 打印：必须解除单节视图

@@ -1,6 +1,6 @@
 # 完整工作流
 
-从「新一章的笔记目录」到「可下载的 GitHub 版本」。每步都有可执行的命令。
+从「一份新的图片目录」到「可下载的 GitHub 版本」。每步都有可执行的命令。
 
 ## 步骤 0：确认输入
 
@@ -11,7 +11,7 @@ Get-ChildItem <笔记根目录> -Directory | ForEach-Object {
 } | Format-Table -AutoSize
 ```
 
-要检查的只有两件事：**子目录名是否就是想要的小节标题**、**图片文件名里的数字排序能否表达讲课顺序**。
+要检查的只有两件事：**子目录名是否就是想要的小节标题**、**图片文件名里的数字排序能否表达阅读顺序**。
 排序不对就在文件名上补数字（构建是自然序，`2 (1)` 会排在 `1.jpeg` 之后）。
 
 ## 步骤 1：构建
@@ -19,10 +19,12 @@ Get-ChildItem <笔记根目录> -Directory | ForEach-Object {
 ```powershell
 cd image-notes-book
 ./scripts/build-page.ps1 `
-  -Source 'C:\path\to\第5章' `
-  -Out    'C:\path\to\第5章\计算机组成原理-第5章图片笔记-轻量版.html' `
-  -ChapterNo 5 -ChapterTitle '中央处理器' -Series '计组 · 图片笔记'
+  -Source 'C:\path\to\notes' `
+  -Out    'C:\path\to\notes\notes.html' `
+  -ChapterNo 2 -ChapterTitle '主题名' -Series 'My Notes'
 ```
+
+`-ChapterNo` / `-ChapterTitle` / `-Series` 都只是标签，填什么显示什么，不限定是课程章节。
 
 耗时：图片编码约 100 张 / 1–2 分钟；复用模式（`-ReuseFrom`）为秒级。
 
@@ -36,7 +38,7 @@ cd image-notes-book
 
 ## 步骤 3：人工检查（3 项，30 秒）
 
-1. 双击打开 → 默认只显示第 1 节，左下胶囊显示 `1/16 · …`
+1. 双击打开 → 默认只显示第 1 节，左下胶囊显示 `1/N · …`
 2. 点任意图 → 灯箱打开，`←/→` 翻页，再点一次图变原始尺寸
 3. `Ctrl+P` 打印预览 → 应该是**全部小节**分页，而不是一节
 
@@ -60,7 +62,7 @@ cd image-notes-book
 3. 首个版本建议 `v0.1.0`，tag + Release 一起建，正文用 `CHANGELOG.md` 对应小节
 4. 回报固定表格：版本 / 提交 / 标签 / Release / 下载链接
 
-发布前的验证口径：技能自身无构建，但必须跑一次真实构建 —— 拿任意一章的目录生成到临时文件，
+发布前的验证口径：技能自身无构建，但必须跑一次真实构建 —— 拿任意一个图片目录生成到临时文件，
 `check-page.ps1` 通过后再发布。
 
 ## 常见故障
@@ -70,19 +72,19 @@ cd image-notes-book
 | `无法加载脚本…未数字签名` | 执行策略是 Restricted | 用 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-page.ps1 …` 运行（推荐）；`Invoke-Expression` 也能跑，但 `$PSScriptRoot` 为空，必须显式传 `-TemplateDir` |
 | 中文变成乱码 | .ps1 被存成 ANSI | 脚本必须以 UTF-8 **带 BOM** 保存（PS 5.1 靠 BOM 判断编码），仓库里已如此 |
 | 目录里多出一个空小节 | 技能仓库本身就放在笔记根目录里 | 构建会自动跳过含 `.git` 的目录；若放的是别的东西，用 `-Exclude 目录名` |
-| 页面显示 `AT&amp;T` | 目录名里带着 HTML 实体 | 构建脚本已自动还原；若仍出现，检查是否被二次转义 |
+| 页面显示 `A&amp;B` | 目录名里带着 HTML 实体 | 构建脚本已自动还原；若仍出现，检查是否被二次转义 |
 | 图片看起来发虚 | 版心超过图片原生宽度 | 确认 `assets/style.css` 里 `figure{max-width:1000px}` 还在 |
 | 打印只有一节 | 打印块缺少 `#chapters section[hidden]{display:block!important}` | 补上（见 `layout-spec.md` §4） |
-| 首屏很慢 / 浏览器卡 | 单文件过大 | `-Quality 72`，或按章拆成多页 |
+| 首屏很慢 / 浏览器卡 | 单文件过大 | `-Quality 72`，或按册拆成多页 |
 | `占位符残留` 报错 | 模板被改坏了 | 对照 `assets/shell.html` 的 `{{TOKEN}}` 清单 |
 | 输出路径报「目录不存在」 | `-Out` 的父目录必须先存在 | 先建目录；脚本不会替你建 |
 
-## 一次真实运行的记录（第 4 章）
+## 性能参考
 
-```text
-Source : 计组\4（16 个子目录 = 16 节，112 张截图）
-参数   : -ChapterNo 4 -ChapterTitle 指令系统 -Quality 80
-结果   : 112 张图，16.28 MB 原图 → 8.05 MB 单文件
-校验   : 小节 16 / 图片 112 / 目录项 16 一一对应，脚本语法通过
-备注   : 4.3.1_3_AT&amp;T格式和Intel格式 的目录名带实体，页面内还原为 AT&T
-```
+| 规模 | 首建（质量 80） | 产物 | 复用重建 |
+|---|---|---|---|
+| ~20 张 / 4–6 节 | 10–20 秒 | 2 MB 左右 | < 1 秒 |
+| ~100 张 / 10–20 节 | 1–2 分钟 | 8 MB 左右 | < 1 秒 |
+| ~250 张 | 3–5 分钟 | 18–20 MB，接近舒服上限 | < 1 秒 |
+
+超过 25 MB 建议按册拆页：内容同源的图放同一个根目录，其余用下一个根目录，两份页面互不干扰。
