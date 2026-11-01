@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{TITLE}}</title><style>
+{{CSS}}
+</style></head>
+<body id="top">
+<button type="button" id="sidebar-toggle" class="toc-toggle" aria-controls="chapter-sidebar" aria-expanded="true"><span aria-hidden="true">☰</span><span>目录</span><span class="toc-current" id="toc-current"></span></button>
+<div class="scrim" id="toc-scrim"></div>
+<aside id="chapter-sidebar" class="sidebar">
+  <div class="brand"><small>{{BRAND_SUB}}</small>{{SERIES}}</div>
+  <p>{{SIDEBAR_NOTE}}</p>
+  <label for="search" hidden>搜索章节或图片名</label>
+  <input id="search" type="search" placeholder="{{SEARCH_PLACEHOLDER}}" aria-label="{{SEARCH_PLACEHOLDER}}，按 / 聚焦">
+  <nav aria-label="章节目录">{{NAV}}</nav>
+</aside>
+<main>
+  <header>
+    <div class="eyebrow">{{EYEBROW}}</div>
+    <h1>{{H1}}</h1>
+    <p>{{HEADNOTE}}</p>
+    <div class="stats">{{STATS}}</div>
+  </header>
+  <div class="toolbar"><span id="result" aria-live="polite">按章节编号与图片文件名排序</span><button id="layout" aria-pressed="false">切换为双列浏览</button></div>
+  <div id="chapters">{{SECTIONS}}</div>
+  <p id="no-results" hidden>没有找到匹配的章节，请尝试其他关键词。</p>
+  <footer>{{FOOTNOTE}}</footer>
+</main>
+<a class="top" href="#top">↑ 返回顶部</a>
+<dialog aria-label="图片放大查看">
+  <div class="viewerbar"><p id="view-title"></p><button id="prev" aria-label="上一张图片">←</button><button id="next" aria-label="下一张图片">→</button><button id="zoom">原始尺寸</button><button id="close">关闭 ×</button></div>
+  <div class="viewbody"><img id="large" alt=""></div>
+</dialog>
+<script>
+{{JS}}
+</script>
+</body></html>

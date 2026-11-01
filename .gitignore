@@ -1,0 +1,17 @@
+# 构建产物与临时文件
+out/
+build/
+dist/
+*.tmp
+*.log
+
+# 依赖
+node_modules/
+
+# 系统垃圾
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 本地试构建出来的页面（产物不入库）
+/_preview/
